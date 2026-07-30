@@ -19,7 +19,7 @@
 
 ---
 
-## 🎯 Why This Project?
+## Why This Project?
 
 Most RAG tutorials stop at basic vector search. **HybridRAG-Pro** implements the full production stack that real AI engineering teams deploy:
 
@@ -33,7 +33,7 @@ Most RAG tutorials stop at basic vector search. **HybridRAG-Pro** implements the
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 flowchart TD
@@ -64,7 +64,7 @@ flowchart TD
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 ```bash
 # 1. Clone and configure
@@ -84,7 +84,7 @@ open http://localhost:8080/docs  # FastAPI Swagger UI
 
 ---
 
-## 🔬 Techniques Implemented
+## Techniques Implemented
 
 | Technique | Description |
 |---|---|
@@ -100,7 +100,7 @@ open http://localhost:8080/docs  # FastAPI Swagger UI
 
 ---
 
-## 📊 Retrieval Method Comparison
+# Retrieval Method Comparison
 
 | Method | Precision@5 | Recall@5 | Latency | Best For |
 |---|---|---|---|---|
@@ -166,7 +166,7 @@ hybrid-rag-pro/
 
 ---
 
-## 🔌 API Reference
+## API Reference
 
 ```bash
 # Query
@@ -214,13 +214,9 @@ curl -X POST http://localhost:8080/query \
 
 ---
 
-## 👤 About the Author
+## 👤 Author
 
 **Mohamed NAJID** — AI Engineer & Deep Learning Specialist
-
-M2 Artificial Intelligence — Université Claude Bernard Lyon 1.  
-Currently building production AI systems at **Alstom** (predictive maintenance for railway motors).  
-Previously: RAG-based recruitment system at **Recruit.IA**, anomaly detection at **Orange**.
 
 This project reflects real-world RAG patterns applied in production freelance contexts, reimplemented as an open-source portfolio piece.
 
@@ -231,9 +227,5 @@ This project reflects real-world RAG patterns applied in production freelance co
 ---
 
 <div align="center">
-
-⭐ **If this project helped you, please star it!** ⭐
-
-*Built with ❤️ for the AI engineering community*
 
 </div>
