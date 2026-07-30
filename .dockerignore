@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Env
+.env
+*.env
+
+# Data (mounted as volumes)
+data/
+logs/
+mlruns/
+eval_results/
+
+# Git
+.git/
+.gitignore
+
+# Dev tools
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Notebooks
+notebooks/
+
+# Tests
+tests/
+
+# Docs
+*.md
+!README.md

@@ -1,0 +1,117 @@
+# ============================================================
+# HybridRAG-Pro — Docker Compose Stack
+# Services: ChromaDB + FastAPI + Streamlit
+# Usage: docker-compose up --build
+# ============================================================
+
+version: "3.9"
+
+services:
+
+  # ----------------------------------------------------------
+  # ChromaDB — Persistent vector store
+  # ----------------------------------------------------------
+  chromadb:
+    image: chromadb/chroma:0.5.5
+    container_name: hybridrag_chroma
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER=chromadb.auth.token.TokenConfigServerAuthCredentialsProvider
+      - ANONYMIZED_TELEMETRY=false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - hybridrag_net
+
+  # ----------------------------------------------------------
+  # FastAPI — RAG API backend
+  # ----------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: hybridrag_api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - faiss_data:/app/data/faiss_index
+      - uploads_data:/app/data/uploads
+      - eval_results:/app/eval_results
+      - logs_data:/app/logs
+    env_file:
+      - .env
+    environment:
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - FAISS_INDEX_PATH=/app/data/faiss_index
+      - API_HOST=0.0.0.0
+      - API_PORT=8080
+      - API_RELOAD=false
+    depends_on:
+      chromadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - hybridrag_net
+
+  # ----------------------------------------------------------
+  # Streamlit — Chat UI
+  # ----------------------------------------------------------
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: hybridrag_ui
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE=http://api:8080
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - hybridrag_net
+
+# ----------------------------------------------------------
+# Volumes — persistent storage
+# ----------------------------------------------------------
+volumes:
+  chroma_data:
+    driver: local
+  faiss_data:
+    driver: local
+  uploads_data:
+    driver: local
+  eval_results:
+    driver: local
+  logs_data:
+    driver: local
+
+# ----------------------------------------------------------
+# Network
+# ----------------------------------------------------------
+networks:
+  hybridrag_net:
+    driver: bridge
